@@ -3,10 +3,14 @@ package com.poojanshah.json_fist_application;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,6 +36,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 //    @Inject
 //    Interactor_Impl interactor_;
+
+    static final Integer LOCATION = 0x1;
+    static final Integer CALL = 0x2;
+    static final Integer WRITE_EXST = 0x3;
+    static final Integer READ_EXST = 0x4;
+    static final Integer CAMERA = 0x5;
+    static final Integer ACCOUNTS = 0x6;
+    static final Integer GPS_SETTINGS = 0x7;
 
     private GoogleMap mMap;
 
@@ -111,6 +123,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            // Check Permissions Now
+            askForPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION);
             return;
         }
         mMap.setMyLocationEnabled(true);
@@ -119,5 +133,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        LatLng sydney = new LatLng(-34, 151);
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    private void askForPermission(String permission, Integer requestCode) {
+        if (ContextCompat.checkSelfPermission(MapsActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MapsActivity.this, permission)) {
+
+                //This is called if user has denied the permission before
+                //In this case I am just asking the permission again
+                ActivityCompat.requestPermissions(MapsActivity.this, new String[]{permission}, requestCode);
+
+            } else {
+
+                ActivityCompat.requestPermissions(MapsActivity.this, new String[]{permission}, requestCode);
+            }
+        } else {
+            Toast.makeText(this, "" + permission + " is already granted.", Toast.LENGTH_SHORT).show();
+        }
     }
 }
