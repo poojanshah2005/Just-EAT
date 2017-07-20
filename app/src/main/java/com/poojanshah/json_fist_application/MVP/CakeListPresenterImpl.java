@@ -75,11 +75,9 @@ public class CakeListPresenterImpl  extends  BasePresenter<ICakeListView> implem
         for(Restaurant restaurant: justEat.getRestaurants()){
             LatLng location = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
             latLngs.add(location);
-
         }
         intent.putExtra("justEat",latLngs);
         context.startActivity(intent);
-
     }
 
     public void injectForData(APIComponent apiComponent) {

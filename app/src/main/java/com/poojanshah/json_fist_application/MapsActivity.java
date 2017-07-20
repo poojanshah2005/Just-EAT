@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.poojanshah.json_fist_application.Injection.components.APIComponent;
 import com.poojanshah.json_fist_application.MVP.interactor.Interactor;
 import com.poojanshah.json_fist_application.MVP.interactor.Interactor_Impl;
+import com.poojanshah.json_fist_application.MVP.interactor.Interactor_Impl2;
 import com.poojanshah.json_fist_application.model.JustEat;
 import com.poojanshah.json_fist_application.model.Restaurant;
 
@@ -31,7 +32,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
 
-    ArrayList<LatLng> latLngs;
+//    ArrayList<LatLng> latLngs;
+
+    Interactor_Impl2 interactor_2;
+
+    JustEat justEat;
+
 
     public MapsActivity() {
     }
@@ -45,12 +51,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Bundle extras = getIntent().getExtras();
-        latLngs = new ArrayList<>();
+        interactor_2 = new Interactor_Impl2();
 
-        if (extras != null) {
-            latLngs = (ArrayList<LatLng>) extras.get("justEat");
-        }
+//        Bundle extras = getIntent().getExtras();
+//        latLngs = new ArrayList<>();
+//
+//        if (extras != null) {
+//            latLngs = (ArrayList<LatLng>) extras.get("justEat");
+//        }
 
     }
 
@@ -60,9 +68,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void onSuccess(JustEat justEat) {
-        //        for(Restaurant restaurant: justEat.getRestaurants()){
-//            Log.i("restaurant.getName()", restaurant.getName());
-//        }
+                for(Restaurant restaurant: justEat.getRestaurants()){
+            Log.i("restaurant.getName()", restaurant.getName());
+                    LatLng sydney = new LatLng(restaurant.getLatitude(),restaurant.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(sydney)).setTitle(restaurant.getName());
+        }
+        this.justEat = justEat;
+
     }
 
     /**
@@ -77,11 +89,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        for(LatLng l:latLngs){
-            Log.i("onMapReady", l.longitude + " " + l.latitude);
-            LatLng sydney = new LatLng(l.latitude,l.longitude);
-            mMap.addMarker(new MarkerOptions().position(sydney));
-        }
+//        for(LatLng l:latLngs){
+////            Log.i("onMapReady", l.longitude + " " + l.latitude);
+//            LatLng sydney = new LatLng(l.latitude,l.longitude);
+//            mMap.addMarker(new MarkerOptions().position(sydney));
+//        }
+
+        interactor_2.getCakeList().observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread()).subscribe(this:: onSuccess, this:: OnError);
 
         // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34, 151);
