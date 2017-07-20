@@ -5,6 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.poojanshah.json_fist_application.MainActivity">
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeRefreshCakes"
