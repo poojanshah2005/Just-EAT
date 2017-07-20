@@ -30,7 +30,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ((MyApp)getApplicationContext()).getiPresenterComponent().inject(this);
         setInjections();
+        cakeListPresenter.setContext(getApplicationContext());
         cakeListPresenter.performCakeListDisplay();
+//        Intent intent = new Intent(MainActivity.this,MapsActivity.class);
+//        startActivity(intent);
     }
 
     private void setInjections() {
@@ -38,9 +41,10 @@ public class MainActivity extends AppCompatActivity {
         cakeListPresenter.injectForData(apiComponent);
     }
 
-    public void openMaps(){
-        Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-        startActivity(intent);
-
-    }
+//    public void openMaps(JustEat justEat){
+//        Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+//        intent.putExtra("justEat",justEat);
+//        startActivity(intent);
+//
+//    }
 }

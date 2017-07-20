@@ -1,7 +1,9 @@
 package com.poojanshah.json_fist_application;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -9,16 +11,30 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.poojanshah.json_fist_application.Injection.components.APIComponent;
+import com.poojanshah.json_fist_application.MVP.interactor.Interactor;
 import com.poojanshah.json_fist_application.MVP.interactor.Interactor_Impl;
+import com.poojanshah.json_fist_application.model.JustEat;
+import com.poojanshah.json_fist_application.model.Restaurant;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    @Inject
-    Interactor_Impl interactor_;
+//    @Inject
+//    Interactor_Impl interactor_;
 
     private GoogleMap mMap;
+
+    ArrayList<LatLng> latLngs;
+
+    public MapsActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +44,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        Bundle extras = getIntent().getExtras();
+        latLngs = new ArrayList<>();
+
+        if (extras != null) {
+            latLngs = (ArrayList<LatLng>) extras.get("justEat");
+        }
+
     }
 
+    private void OnError(Throwable throwable) {
+        Log.i("Maps Throwable", throwable.getMessage());
+        Log.i("Maps Throwable", String.valueOf(throwable.getCause()));
+    }
+
+    private void onSuccess(JustEat justEat) {
+        //        for(Restaurant restaurant: justEat.getRestaurants()){
+//            Log.i("restaurant.getName()", restaurant.getName());
+//        }
+    }
 
     /**
      * Manipulates the map once available.
@@ -43,10 +77,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        for(LatLng l:latLngs){
+            Log.i("onMapReady", l.longitude + " " + l.latitude);
+            LatLng sydney = new LatLng(l.latitude,l.longitude);
+            mMap.addMarker(new MarkerOptions().position(sydney));
+        }
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+//        LatLng sydney = new LatLng(-34, 151);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 }

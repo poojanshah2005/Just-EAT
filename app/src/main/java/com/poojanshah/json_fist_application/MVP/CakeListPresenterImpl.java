@@ -1,8 +1,10 @@
 package com.poojanshah.json_fist_application.MVP;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.poojanshah.json_fist_application.Injection.components.APIComponent;
 import com.poojanshah.json_fist_application.MVP.interactor.Interactor_Impl;
 import com.poojanshah.json_fist_application.MainActivity;
@@ -27,12 +29,16 @@ public class CakeListPresenterImpl  extends  BasePresenter<ICakeListView> implem
     @Inject
     Interactor_Impl interactor_;
 
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    Context context;
+
     @Inject
     public CakeListPresenterImpl(Interactor_Impl interactor_) {
         this.interactor_ = interactor_;
     }
-
-
 
     @Override
     public void attachView(ICakeListView MVPView) {
@@ -57,9 +63,23 @@ public class CakeListPresenterImpl  extends  BasePresenter<ICakeListView> implem
     }
 
     private void onSuccess(JustEat justEat) {
+//        for(Restaurant restaurant: justEat.getRestaurants()){
+//            Log.i("restaurant.getName()", restaurant.getName());
+//        }
+        openMaps(justEat);
+    }
+
+    public void openMaps(JustEat justEat){
+        Intent intent = new Intent(context, MapsActivity.class);
+        ArrayList<LatLng> latLngs = new ArrayList<>();
         for(Restaurant restaurant: justEat.getRestaurants()){
-            Log.i("restaurant.getName()", restaurant.getName());
+            LatLng location = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+            latLngs.add(location);
+
         }
+        intent.putExtra("justEat",latLngs);
+        context.startActivity(intent);
+
     }
 
     public void injectForData(APIComponent apiComponent) {
