@@ -1,22 +1,47 @@
 package com.poojanshah.json_fist_application.MVP;
 
+import android.util.Log;
+
 import com.poojanshah.json_fist_application.Injection.components.APIComponent;
 import com.poojanshah.json_fist_application.MVP.interactor.Interactor_Impl;
+import com.poojanshah.json_fist_application.MyApp;
+import com.poojanshah.json_fist_application.model.JustEat;
+import com.poojanshah.json_fist_application.model.Restaurant;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by shahp on 14/07/2017.
  */
 
 public class CakeListPresenterImpl  extends  BasePresenter<ICakeListView> implements  ICakeListPresenter{
-//    @Inject
-        Interactor_Impl interactor_;
+    @Inject
+    Interactor_Impl interactor_;
 
     @Inject
     public CakeListPresenterImpl(Interactor_Impl interactor_) {
         this.interactor_ = interactor_;
+//                interactor_.getCakeList().observeOn(AndroidSchedulers.mainThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.newThread()).subscribe(this:: onSuccess, this:: OnError);
+
     }
+
+//    public CakeListPresenterImpl() {
+//        this.interactor_ = new Interactor_Impl();
+////                interactor_.getCakeList().observeOn(AndroidSchedulers.mainThread())
+////                .observeOn(AndroidSchedulers.mainThread())
+////                .subscribeOn(Schedulers.newThread()).subscribe(this:: onSuccess, this:: OnError);
+//
+//    }
+
+
 
     @Override
     public void attachView(ICakeListView MVPView) {
@@ -30,7 +55,11 @@ public class CakeListPresenterImpl  extends  BasePresenter<ICakeListView> implem
 
     @Override
     public void performCakeListDisplay(){
-        checkViewAttached();
+//        checkViewAttached();
+
+        interactor_.getCakeList().observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread()).subscribe(this:: onSuccess, this:: OnError);
 
 //        ReactiveNetwork.observeInternetConnectivity()
 //                .subscribeOn(Schedulers.io())
@@ -62,6 +91,17 @@ public class CakeListPresenterImpl  extends  BasePresenter<ICakeListView> implem
 //                        }
 //                    }
 //                });
+    }
+
+    private void OnError(Throwable throwable) {
+        Log.i("CPL Throwable", throwable.getMessage());
+        Log.i("CPL Throwable", String.valueOf(throwable.getCause()));
+    }
+
+    private void onSuccess(JustEat justEat) {
+        for(Restaurant restaurant: justEat.getRestaurants()){
+            Log.i("restaurant.getName()", restaurant.getName());
+        }
     }
 
     public void injectForData(APIComponent apiComponent) {

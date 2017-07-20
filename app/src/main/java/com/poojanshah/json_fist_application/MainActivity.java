@@ -21,52 +21,39 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Inject
-    Interactor_Impl interactor_;
-    @Inject
     CakeListPresenterImpl cakeListPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        interactor_ = new Interactor_Impl();
+        ((MyApp)getApplicationContext()).getiPresenterComponent().inject(this);
         setInjections();
+//        cakeListPresenter = new CakeListPresenterImpl();
 
+//        cakeListPresenter.attachView();
+
+        cakeListPresenter.performCakeListDisplay();
+
+//        cakeListPresenter.performCakeListDisplay();
+    }
 //        ((MyApp) getApplicationContext()).getiPresenterComponent().inject(this);
-
-
-        cakeListPresenter = new CakeListPresenterImpl(interactor_);
-
+//
+//
+//        cakeListPresenter = new CakeListPresenterImpl(interactor_);
+//
 //        cakeListPresenter.attachView(this);
-
-        interactor_.getCakeList().observeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread()).subscribe(this:: onSuccess, this:: OnError);
-
+//
+//        interactor_.getCakeList().observeOn(AndroidSchedulers.mainThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.newThread()).subscribe(this:: onSuccess, this:: OnError);
+//
 //                                            interactor_.getCakeList()
 //                                    .observeOn(AndroidSchedulers.mainThread())
 //                                    .subscribeOn(Schedulers.newThread())
 //                                    .subscribe(this:: onSuccess, this:: OnError);
 //
 //        cakeListPresenter.performCakeListDisplay();
-
-    }
-
-    private void onSuccess(JustEat justEat) {
-        Log.i("Size", String.valueOf(justEat.getRestaurants().size()));
-        for(Restaurant c: justEat.getRestaurants()){
-            Log.i("CakeModelonSuccessD", c.getName());
-        }
-    }
-
-    private void OnError(Throwable throwable) {
-        Log.i("throwable.getMessage()", throwable.getMessage());
-        Log.i("throwable.getCause()", String.valueOf(throwable.getCause()));
-
-    }
-
-
-//
 //        swiperefresh = (SwipeRefreshLayout )findViewById(R.id.swipeRefreshCakes);
 //        updateOperate();
         /*
@@ -85,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //
 //    }
-
+//
 //    public void updateOperate(){
 //        ReactiveNetwork.observeInternetConnectivity()
 //                .subscribeOn(Schedulers.io())
@@ -105,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 //                });
 //    }
-
+//
 //    private void onSuccess(List<CakesModel> cakesModels) {
 //        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 //        /**
@@ -168,18 +155,12 @@ public class MainActivity extends AppCompatActivity {
 //        swiperefresh.setRefreshing(false);
 //    }
 
-
-    public void injectForData(APIComponent apiComponent) {
-        interactor_.initiateInjectionGraph(apiComponent);
-    }
-
+//    public void injectForData(APIComponent apiComponent) {
+//        interactor_.initiateInjectionGraph(apiComponent);
+//    }
+//
     private void setInjections() {
         APIComponent apiComponent = ((MyApp) getApplicationContext()).getApiComponent();
-        this.injectForData(apiComponent);
+        cakeListPresenter.injectForData(apiComponent);
     }
-
-
-
-
-
 }

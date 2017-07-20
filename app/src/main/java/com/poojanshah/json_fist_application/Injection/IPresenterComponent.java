@@ -14,6 +14,6 @@ import dagger.Provides;
 @Component(dependencies = {PresenterModule.class})
 public interface IPresenterComponent {
     void inject(MainActivity mainActivity);
-    void inject(CakeListPresenterImpl cakeListPresenter);
+   // void inject(CakeListPresenterImpl cakeListPresenter);
 //    void inject(Interactor_Impl interactor_);
 }

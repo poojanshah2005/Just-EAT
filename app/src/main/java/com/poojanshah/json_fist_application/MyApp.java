@@ -6,6 +6,7 @@ import android.util.Base64;
 
 import com.poojanshah.json_fist_application.Injection.APIModule;
 import com.poojanshah.json_fist_application.Injection.AppModule;
+import com.poojanshah.json_fist_application.Injection.DaggerIPresenterComponent;
 import com.poojanshah.json_fist_application.Injection.IPresenterComponent;
 import com.poojanshah.json_fist_application.Injection.NetModule;
 import com.poojanshah.json_fist_application.Injection.components.APIComponent;
@@ -46,6 +47,7 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
 
+        iPresenterComponent= DaggerIPresenterComponent.create();
         netComponent= DaggerNetComponent.builder()
                 .netModule(new NetModule(Constants.BASE_URL))
                 .appModule(new AppModule(this))
