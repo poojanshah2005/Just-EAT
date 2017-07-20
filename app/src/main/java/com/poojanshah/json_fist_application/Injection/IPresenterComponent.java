@@ -3,7 +3,6 @@ package com.poojanshah.json_fist_application.Injection;
 import com.poojanshah.json_fist_application.MVP.CakeListPresenterImpl;
 import com.poojanshah.json_fist_application.MVP.interactor.Interactor_Impl;
 import com.poojanshah.json_fist_application.MainActivity;
-import com.poojanshah.json_fist_application.service.RequestInterface;
 
 import dagger.Component;
 import dagger.Provides;
@@ -16,6 +15,5 @@ import dagger.Provides;
 public interface IPresenterComponent {
     void inject(MainActivity mainActivity);
     void inject(CakeListPresenterImpl cakeListPresenter);
-    void inject(Interactor_Impl interactor_);
-    void inject(RequestInterface requestInterface);
+//    void inject(Interactor_Impl interactor_);
 }
