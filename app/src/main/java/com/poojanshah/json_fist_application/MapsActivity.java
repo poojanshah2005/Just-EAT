@@ -1,6 +1,9 @@
 package com.poojanshah.json_fist_application;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -68,10 +71,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void onSuccess(JustEat justEat) {
-                for(Restaurant restaurant: justEat.getRestaurants()){
-            Log.i("restaurant.getName()", restaurant.getName());
-                    LatLng sydney = new LatLng(restaurant.getLatitude(),restaurant.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(sydney)).setTitle(restaurant.getName());
+        for (Restaurant restaurant : justEat.getRestaurants()) {
+//            Log.i("restaurant.getName()", restaurant.getName());
+            LatLng location = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(location)).setTitle(restaurant.getName());
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         }
         this.justEat = justEat;
 
@@ -97,7 +101,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         interactor_2.getCakeList().observeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread()).subscribe(this:: onSuccess, this:: OnError);
+                .subscribeOn(Schedulers.newThread()).subscribe(this::onSuccess, this::OnError);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
 
         // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34, 151);
